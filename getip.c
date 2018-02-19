@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+
 int main(int argc, char *argv[])
 {
     struct ifaddrs *ifaddr, *ifa;
@@ -17,7 +18,6 @@ int main(int argc, char *argv[])
         perror("getifaddrs");
         exit(EXIT_FAILURE);
     }
-
 
     for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next) 
     {
