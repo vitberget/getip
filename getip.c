@@ -13,27 +13,36 @@ int main(int argc, char *argv[])
     int family, s;
     char host[NI_MAXHOST];
 
-    if (getifaddrs(&ifaddr) == -1) 
+    char *interface;
+    char default_interface[] = "eth1";
+
+    if(argc>1) {
+        interface = argv[1];
+    } else {
+      interface = default_interface;
+    }
+
+    if (getifaddrs(&ifaddr) == -1)
     {
         perror("getifaddrs");
         exit(EXIT_FAILURE);
     }
 
-    for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next) 
+    for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next)
     {
         if (ifa->ifa_addr == NULL)
-            continue;  
+            continue;
 
         s=getnameinfo(ifa->ifa_addr,sizeof(struct sockaddr_in),host, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
 
-        if((strcmp(ifa->ifa_name,"eth1")==0)&&(ifa->ifa_addr->sa_family==AF_INET))
+        if((strcmp(ifa->ifa_name, interface)==0)&&(ifa->ifa_addr->sa_family==AF_INET))
         {
             if (s != 0)
             {
                 printf("getnameinfo() failed: %s\n", gai_strerror(s));
                 exit(EXIT_FAILURE);
             }
-            printf("%s", host); 
+            printf("%s", host);
         }
     }
 
